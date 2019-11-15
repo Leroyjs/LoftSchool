@@ -22,6 +22,7 @@ function forEach(array, fn) {
  */
 function map(array, fn) {
     let newArray = [];
+
     for (let i = 0; i < array.length; i++) {
         newArray[i] = fn(array[i], i, array);
     }
@@ -59,6 +60,7 @@ function upperProps(obj) {
     let keyArray = [];
     let i = 0;
 
+    // eslint-disable-next-line guard-for-in
     for (let key in obj) {
         keyArray[i++] = key.toUpperCase();
     }
@@ -75,28 +77,34 @@ function upperProps(obj) {
 function slice(array, from = 0, to = 0) {
     let newArray = [];
     let j = 0;
-    if (from < 0) from = array.length + from;
-    if (to < 0) to = array.length + to;
+
+    if (from < 0) {
+        from = array.length + from;
+    }
+    if (to < 0) {
+        to = array.length + to;
+    }
     for (let i = from; i < to; i++) {
-        if (array[i] != undefined) newArray[j++] = array[i];
+        if (array[i] != undefined) {
+            newArray[j++] = array[i];
+        }
+
+        return newArray;
     }
 
-    return newArray;
-}
+    /*
+     Задание 6 *:
 
-/*
- Задание 6 *:
+     Функция принимает объект и должна вернуть Proxy для этого объекта
+     Proxy должен перехватывать все попытки записи значений свойств и возводить это значение в квадрат
+     */
+    function createProxy(obj) {}
 
- Функция принимает объект и должна вернуть Proxy для этого объекта
- Proxy должен перехватывать все попытки записи значений свойств и возводить это значение в квадрат
- */
-function createProxy(obj) {}
-
-export {
-    forEach,
-    map,
-    reduce,
-    upperProps,
-    slice,
-    createProxy
-};
+    export {
+        forEach,
+        map,
+        reduce,
+        upperProps,
+        slice,
+        createProxy
+    };
