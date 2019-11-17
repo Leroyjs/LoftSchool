@@ -71,40 +71,45 @@ function upperProps(obj) {
 /*
  Задание 5 *:
 
- Напишите аналог встроенного метода slice для работы с массивами
- Посмотрите как работает slice и повторите это поведение для массива, который будет передан в параметре array
  */
-function slice(array, from = 0, to = 0) {
+function slice(array, from = 0, to = array.length) {
     let newArray = [];
     let j = 0;
 
     if (from < 0) {
-        from = array.length + from;
+        from = array.length + from
+    } else if (from > array.length) {
+        from = array.length
     }
+
     if (to < 0) {
-        to = array.length + to;
+        to = array.length + to
+    } else if (to > array.length) {
+        to = array.length
     }
+
     for (let i = from; i < to; i++) {
         if (array[i] != undefined) {
             newArray[j++] = array[i];
         }
-
-        return newArray;
     }
 
-    /*
-     Задание 6 *:
+    return newArray;
+}
 
-     Функция принимает объект и должна вернуть Proxy для этого объекта
-     Proxy должен перехватывать все попытки записи значений свойств и возводить это значение в квадрат
-     */
-    function createProxy(obj) {}
+/*
+ Задание 6 *:
 
-    export {
-        forEach,
-        map,
-        reduce,
-        upperProps,
-        slice,
-        createProxy
-    };
+ Функция принимает объект и должна вернуть Proxy для этого объекта
+ Proxy должен перехватывать все попытки записи значений свойств и возводить это значение в квадрат
+ */
+function createProxy(obj) {}
+
+export {
+    forEach,
+    map,
+    reduce,
+    upperProps,
+    slice,
+    createProxy
+};
