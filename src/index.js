@@ -38,8 +38,11 @@ function map(array, fn) {
  */
 function reduce(array, fn, initial) {
     let i = 0;
-    let result = initial || array[i++];
+    let result = initial || array[i];
 
+    if (result == array[i]) {
+        i++;
+    }
     while (i < array.length) {
         result = fn(result, array[i], i, array);
         i++;
@@ -62,7 +65,8 @@ function upperProps(obj) {
 
     // eslint-disable-next-line guard-for-in
     for (let key in obj) {
-        keyArray[i++] = key.toUpperCase();
+        keyArray[i] = key.toUpperCase();
+        i++;
     }
 
     return keyArray;
@@ -74,7 +78,6 @@ function upperProps(obj) {
  */
 function slice(array, from = 0, to = array.length) {
     let newArray = [];
-    let j = 0;
 
     if (from < 0) {
         from = array.length + from
@@ -90,7 +93,7 @@ function slice(array, from = 0, to = array.length) {
 
     for (let i = from; i < to; i++) {
         if (array[i] != undefined) {
-            newArray[j++] = array[i];
+            newArray.push(array[i]);
         }
     }
 
