@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* ДЗ 3 - работа с исключениями и отладчиком */
 
 /*
@@ -19,8 +20,9 @@
 function isAllTrue(array, fn) {
     let boolFlag = true;
 
-    if (array == null || array.length == 0 || array.constructor != Array) {
-        throw 'empty array';
+    // eslint-disable-next-line max-len
+    if (array == null || array.length <= 0 || typeof array != 'object' || (typeof array == 'object' && array[Symbol.iterator] == undefined)) {
+        throw new Error('empty array');
     }
     for (let i = 0; i < array.length; i++) {
         if (fn(array[i]) == false) {
@@ -50,7 +52,7 @@ function isAllTrue(array, fn) {
 function isSomeTrue(array, fn) {
     let boolFlag = false;
 
-    if (array == null || array.length == 0 || array.constructor != Array) {
+    if (array == null || array.length <= 0 || typeof array != 'object' || (typeof array == 'object' && array[Symbol.iterator] == undefined)) {
         throw 'empty array';
     }
     for (let i = 0; i < array.length; i++) {
@@ -75,16 +77,18 @@ function isSomeTrue(array, fn) {
  */
 function returnBadArguments(fn) {
     let errors = [];
-    if (typeof fn != "function") {
+
+    if (typeof fn != 'function') {
         throw 'fn is not a function';
     }
     for (let i = 1; i < arguments.length; i++) {
         try {
             fn(arguments[i]);
-        } catch {
+        } catch (e) {
             errors.push(arguments[i]);
         }
     }
+
     return errors;
 }
 
@@ -114,7 +118,6 @@ function calculator(number = 0) {
     }
 
     function sum(...arg) {
-        let result = number;
         for (const value of arg) {
             result += value;
         }
@@ -123,7 +126,6 @@ function calculator(number = 0) {
     }
 
     function dif(...arg) {
-        let result = number;
         for (const value of arg) {
             result -= value;
         }
@@ -132,7 +134,6 @@ function calculator(number = 0) {
     }
 
     function div(...arg) {
-        let result = number;
         for (const value of arg) {
             if (value == 0) {
                 throw 'division by 0';
@@ -144,7 +145,6 @@ function calculator(number = 0) {
     }
 
     function mul(...arg) {
-        let result = number;
         for (const value of arg) {
             result *= value;
         }
@@ -155,6 +155,7 @@ function calculator(number = 0) {
     obj.dif = dif;
     obj.div = div;
     obj.mul = mul;
+
     return obj;
 }
 
