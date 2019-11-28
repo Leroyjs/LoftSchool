@@ -48,8 +48,5 @@ module.exports = {
             chunks: ['dnd']
         }),
         new CleanWebpackPlugin(['dist'])
-    ],
-    devServer: {
-        port: 3000
-    }
+    ]
 };

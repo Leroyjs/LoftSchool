@@ -27,6 +27,37 @@ const homeworkContainer = document.querySelector('#homework-container');
    homeworkContainer.appendChild(newDiv);
  */
 function createDiv() {
+    function randomInteger(min, max) {
+        let rand = min - 0.5 + Math.random() * (max - min + 1);
+
+        return Math.round(rand);
+    }
+
+    function returnHEX() {
+        let hex = randomInteger(0, 16777215).toString(16);
+
+        while (hex.length < 6) {
+            hex += randomInteger(0, 9);
+        }
+        hex = '#' + hex;
+
+        return hex;
+    }
+    const newDiv = document.createElement('div');
+    const widthDiv = randomInteger(1, 1000);
+    const heightDiv = randomInteger(1, 1000);
+
+    newDiv.style.position = 'absolute';
+    newDiv.style.height = `${heightDiv}px`;
+    newDiv.style.width = `${widthDiv}px`;
+    newDiv.style.left = `${randomInteger(1, 100)}%`;
+    newDiv.style.marginLeft = `-${widthDiv}px`;
+    newDiv.style.top = `${randomInteger(1, 100)}%`;
+    newDiv.style.marginTop = `-${heightDiv}px`;
+    newDiv.style.backgroundColor = returnHEX();
+    homeworkContainer.appendChild(newDiv);
+
+    return newDiv;
 }
 
 /*
@@ -38,6 +69,27 @@ function createDiv() {
    addListeners(newDiv);
  */
 function addListeners(target) {
+    target.classList.add('draggable-div');
+
+    function dragDrop() {
+        function moveAt(e) {
+            target.style.left = e.pageX + target.offsetWidth / 2 + 'px';
+            target.style.top = e.pageY + target.offsetHeight / 2 + 'px';
+        }
+
+        document.onmousemove = function(e) {
+            moveAt(e);
+        }
+
+        target.onmouseup = function() {
+            document.onmousemove = null;
+            target.onmouseup = null;
+        }
+        target.ondragstart = function() {
+            return false;
+        };
+    }
+    target.addEventListener('mousedown', dragDrop)
 }
 
 let addDivButton = homeworkContainer.querySelector('#addDiv');
