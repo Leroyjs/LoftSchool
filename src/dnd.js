@@ -17,6 +17,7 @@
  */
 const homeworkContainer = document.querySelector('#homework-container');
 
+document.body.style.overflow = 'hidden';
 /*
  Функция должна создавать и возвращать новый div с классом draggable-div и случайными размерами/цветом/позицией
  Функция должна только создавать элемент и задвать ему случайные размер/позицию/цвет
