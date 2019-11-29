@@ -159,41 +159,104 @@ function deleteTextNodesRecursive(where) {
      texts: 3
    }
  */
-function collectDOMStat(root) {}
+function collectDOMStat(root) {
+    let characteristic = {
+        tags: {},
+        classes: {},
+        texts: 0,
+    }
+
+    function bruteForce(cursor) {
+        for (var node of cursor.childNodes) {
+            if (node.nodeType == 1) {
+                let cursorInner = node;
+
+                if (node.classList != 0) {
+                    for (let value of node.classList) {
+                        if (characteristic.classes[value] === undefined) {
+                            characteristic.classes[value] = 1;
+                        } else {
+                            characteristic.classes[value]++;
+                        }
+                    }
+                }
+                if (characteristic.tags[node.nodeName] === undefined) {
+                    characteristic.tags[node.nodeName] = 1;
+                } else {
+                    characteristic.tags[node.nodeName]++;
+                }
+                bruteForce(cursorInner);
+            }
+        }
+        for (let node of cursor.childNodes) {
+            if (node.nodeType == 3) {
+                characteristic.texts++;
+            }
+        }
+    }
+    bruteForce(root);
+
+    return characteristic;
+}
 
 /*
- Задание 8 *:
+Задание 8 *:
 
- 8.1: Функция должна отслеживать добавление и удаление элементов внутри элемента переданного в параметре where
- Как только в where добавляются или удаляются элементы,
- необходимо сообщать об этом при помощи вызова функции переданной в параметре fn
+8.1: Функция должна отслеживать добавление и удаление элементов внутри элемента переданного в параметре where
+Как только в where добавляются или удаляются элементы,
+необходимо сообщать об этом при помощи вызова функции переданной в параметре fn
 
- 8.2: При вызове fn необходимо передавать ей в качестве аргумента объект с двумя свойствами:
-   - type: типа события (insert или remove)
-   - nodes: массив из удаленных или добавленных элементов (в зависимости от события)
+8.2: При вызове fn необходимо передавать ей в качестве аргумента объект с двумя свойствами:
+ - type: типа события (insert или remove)
+ - nodes: массив из удаленных или добавленных элементов (в зависимости от события)
 
- 8.3: Отслеживание должно работать вне зависимости от глубины создаваемых/удаляемых элементов
+8.3: Отслеживание должно работать вне зависимости от глубины создаваемых/удаляемых элементов
 
- Рекомендуется использовать MutationObserver
+Рекомендуется использовать MutationObserver
 
- Пример:
-   Если в where или в одного из его детей добавляется элемент div
-   то fn должна быть вызвана с аргументом:
-   {
-     type: 'insert',
-     nodes: [div]
-   }
+Пример:
+ Если в where или в одного из его детей добавляется элемент div
+ то fn должна быть вызвана с аргументом:
+ {
+   type: 'insert',
+   nodes: [div]
+ }
 
-   ------
+ ------
 
-   Если из where или из одного из его детей удаляется элемент div
-   то fn должна быть вызвана с аргументом:
-   {
-     type: 'remove',
-     nodes: [div]
-   }
- */
-function observeChildNodes(where, fn) {}
+ Если из where или из одного из его детей удаляется элемент div
+ то fn должна быть вызвана с аргументом:
+ {
+   type: 'remove',
+   nodes: [div]
+ }
+*/
+function observeChildNodes(where, fn) {
+    let target = where;
+
+    // создаем новый экземпляр наблюдателя
+    let observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            let type;
+            if (mutation.addedNodes.length == 0) {
+                type = 'remove';
+            } else {
+                type = 'insert';
+            }
+            const fnObj = {
+                type: type,
+                nodes: mutation.target,
+            }
+            fn(fnObj);
+        });
+    });
+
+    // создаем конфигурации для наблюдателя
+    let config = { attributes: true, childList: true, characterData: true };
+
+    // запускаем механизм наблюдения
+    observer.observe(target, config);
+}
 
 export {
     createDivWithText,
