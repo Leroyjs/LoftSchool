@@ -43,10 +43,83 @@ const addButton = homeworkContainer.querySelector('#add-button');
 // таблица со списком cookie
 const listTable = homeworkContainer.querySelector('#list-table tbody');
 
+let fullShow = true;
+
+updateList(returtCookies());
+
 filterNameInput.addEventListener('keyup', function() {
-    // здесь можно обработать нажатия на клавиши внутри текстового поля для фильтрации cookie
+    if (filterNameInput.value.length == 0) {
+        fullShow = true;
+    } else {
+        fullShow = false;
+    }
+    updateList(returtCookies(), filterNameInput.value);
 });
 
 addButton.addEventListener('click', () => {
-    // здесь можно обработать нажатие на кнопку "добавить cookie"
+    let nameNewCookie = addNameInput.value;
+    let valueNewCookie = addValueInput.value;
+    let newCookie = `${nameNewCookie}=${valueNewCookie}`;
+
+    if (nameNewCookie === '' || valueNewCookie === '') {
+        alert('Заполните форму');
+    } else {
+        document.cookie = newCookie;
+        updateList(returtCookies());
+        addNameInput.value = '';
+        addValueInput.value = '';
+    }
 });
+
+
+function updateList(cookiesObj, search) {
+    let table = '';
+    let idButton = 0;
+
+    if (fullShow == false) {
+        let searchObj = [];
+
+        for (const key in cookiesObj) {
+            if (key.split(search).length > 1) {
+                searchObj[key] = cookiesObj.key;
+            }
+        }
+        cookiesObj = searchObj;
+    }
+    // eslint-disable-next-line guard-for-in
+    for (const key in cookiesObj) {
+        let tableRow = '<th id="row-' + idButton + '">' + key + '</th>' +
+            '<th>' + cookiesObj[key] + '</th>' +
+            '<th><button id="cookieButton-' + idButton + '">Delete</button>' + '</th>';
+
+        tableRow = '<tr>' + tableRow + '</tr>';
+        idButton++;
+        table += tableRow;
+    }
+    listTable.innerHTML = table;
+
+    for (let i = 0; i < idButton; i++) {
+        const delButton = homeworkContainer.querySelector(`#cookieButton-${i}`);
+
+        delButton.addEventListener('click', () => {
+            const delCookie = homeworkContainer.querySelector(`#row-${i}`).innerHTML;
+
+            document.cookie = delCookie + "= ; expires=Thu, 01 Jan 1970 00:00:01 GMT";
+            updateList(returtCookies());
+        });
+    }
+}
+
+function returtCookies() {
+    const cookiesList = document.cookie;
+    const cookiesArray = cookiesList.split('; ');
+    const cookiesObj = cookiesArray.reduce((prev, current) => {
+        const [name, value] = current.split('=');
+
+        prev[name] = value;
+
+        return prev;
+    }, {});
+
+    return cookiesObj
+}
