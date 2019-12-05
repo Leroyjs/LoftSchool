@@ -64,10 +64,15 @@ addButton.addEventListener('click', () => {
     if (nameNewCookie === '' || valueNewCookie === '') {
         alert('Заполните форму');
     } else {
+        // if (fullShow == false) {
+        //     if (nameNewCookie.split(filterNameInput.value).length > 1) {
+        //         document.cookie = newCookie;
+        //         updateList(returtCookies(), filterNameInput.value);
+        //     }
+        // } else {
         document.cookie = newCookie;
-        updateList(returtCookies());
-        addNameInput.value = '';
-        addValueInput.value = '';
+        updateList(returtCookies(), filterNameInput.value);
+        // }
     }
 });
 
@@ -81,7 +86,7 @@ function updateList(cookiesObj, search) {
 
         for (const key in cookiesObj) {
             if (key.split(search).length > 1) {
-                searchObj[key] = cookiesObj.key;
+                searchObj[key] = cookiesObj[key];
             }
         }
         cookiesObj = searchObj;
@@ -90,7 +95,7 @@ function updateList(cookiesObj, search) {
     for (const key in cookiesObj) {
         let tableRow = '<th id="row-' + idButton + '">' + key + '</th>' +
             '<th>' + cookiesObj[key] + '</th>' +
-            '<th><button id="cookieButton-' + idButton + '">Delete</button>' + '</th>';
+            '<th><button id="cookieButton-' + idButton + '">удалить</button>' + '</th>';
 
         tableRow = '<tr>' + tableRow + '</tr>';
         idButton++;
